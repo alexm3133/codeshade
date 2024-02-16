@@ -6,73 +6,61 @@ vim.api.nvim_exec([[
   highlight CustomHighlight guifg=Black guibg=Yellow ctermfg=Black ctermbg=Yellow
 ]], false)
 
+-- Función para parsear el archivo de resaltados y obtener solo los resaltados para el archivo actual
 local function parse_highlight_file()
+    local current_file_path = vim.api.nvim_buf_get_name(0) -- Obtiene la ruta completa del archivo actual
     local highlights = {}
     local file = io.open(highlight_file, "r")
-    if not file then return highlights end
+    if not file then return {} end
 
     for line in file:lines() do
-        local bufnr, lnum = line:match("(%d+):(%d+)")
-        if bufnr and lnum then
-            bufnr, lnum = tonumber(bufnr), tonumber(lnum)
-            if not highlights[bufnr] then highlights[bufnr] = {} end
-            table.insert(highlights[bufnr], lnum)
+        local file_path, lnum = line:match("([^:]+):(%d+)")
+        if file_path and lnum and file_path == current_file_path then
+            lnum = tonumber(lnum)
+            highlights[lnum] = true
         end
     end
     file:close()
     return highlights
 end
 
+-- Función para guardar los resaltados, incluyendo la ruta del archivo en cada entrada
 local function save_highlights(highlights)
     local file = io.open(highlight_file, "w")
-    for bufnr, lines in pairs(highlights) do
-        for _, lnum in ipairs(lines) do
-            file:write(bufnr .. ":" .. lnum .. "\n")
-        end
+    local current_file_path = vim.api.nvim_buf_get_name(0)
+    for lnum, _ in pairs(highlights) do
+        file:write(current_file_path .. ":" .. lnum .. "\n")
     end
     file:close()
 end
 
+-- Función para alternar el resaltado de las líneas seleccionadas
 function M.toggle_highlight()
     local bufnr = vim.api.nvim_get_current_buf()
-    local start_line = vim.fn.line("'<")
-    local end_line = vim.fn.line("'>")
+    local start_line, end_line = vim.fn.line("'<"), vim.fn.line("'>")
     local highlights = parse_highlight_file()
 
-    highlights[bufnr] = highlights[bufnr] or {}
-    local updated = false
-
     for lnum = start_line, end_line do
-        local exists = false
-        for index, line in ipairs(highlights[bufnr]) do
-            if line == lnum then
-                table.remove(highlights[bufnr], index)
-                vim.api.nvim_buf_clear_namespace(bufnr, -1, lnum-1, lnum)
-                exists = true
-                break
-            end
-        end
-        if not exists then
-            table.insert(highlights[bufnr], lnum)
-            updated = true
+        if highlights[lnum] then
+            -- Si ya está resaltado, quitar el resaltado
+            vim.api.nvim_buf_clear_namespace(bufnr, -1, lnum-1, lnum)
+            highlights[lnum] = nil
+        else
+            -- Si no está resaltado, añadir el resaltado
+            vim.api.nvim_buf_add_highlight(bufnr, -1, "CustomHighlight", lnum - 1, 0, -1)
+            highlights[lnum] = true
         end
     end
 
-    if updated then
-        save_highlights(highlights)
-    end
-
-    -- Reaplicar todos los resaltados para este buffer
-    for _, lnum in ipairs(highlights[bufnr] or {}) do
-        vim.api.nvim_buf_add_highlight(bufnr, -1, "CustomHighlight", lnum - 1, 0, -1)
-    end
+    save_highlights(highlights)
 end
 
+-- Función para cargar resaltados automáticamente al abrir un archivo
 function M.load_highlights()
     local bufnr = vim.api.nvim_get_current_buf()
     local highlights = parse_highlight_file()
 
-    for _, lnum in ipairs(highlights[bufnr] or {}) do
+    for lnum, _ in pairs(highlights) do
         vim.api.nvim_buf_add_highlight(bufnr, -1, "CustomHighlight", lnum - 1, 0, -1)
     end
 end
