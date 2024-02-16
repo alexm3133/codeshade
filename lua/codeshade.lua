@@ -32,25 +32,23 @@ local function save_highlights(highlights)
     end
     file:close()
 end
+
 function M.toggle_highlight()
     local bufnr = vim.api.nvim_get_current_buf()
     local start_line = vim.fn.line("'<")
     local end_line = vim.fn.line("'>")
     local highlights = parse_highlight_file()
 
-    -- Inicializa el buffer si es necesario
     highlights[bufnr] = highlights[bufnr] or {}
-
     local updated = false
+
     for lnum = start_line, end_line do
         local exists = false
-        -- Verifica si la línea ya está resaltada
         for index, line in ipairs(highlights[bufnr]) do
             if line == lnum then
                 table.remove(highlights[bufnr], index)
                 vim.api.nvim_buf_clear_namespace(bufnr, -1, lnum-1, lnum)
                 exists = true
-                updated = true
                 break
             end
         end
@@ -70,7 +68,6 @@ function M.toggle_highlight()
     end
 end
 
-
 function M.load_highlights()
     local bufnr = vim.api.nvim_get_current_buf()
     local highlights = parse_highlight_file()
@@ -86,6 +83,13 @@ vim.api.nvim_create_user_command('LoadHighlight', M.load_highlights, {})
 vim.api.nvim_set_keymap('v', '<Leader>hl', ':ToggleHighlight<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>lh', ':LoadHighlight<CR>', { noremap = true, silent = true })
 
-return M
+-- Autocargar resaltados al abrir archivos
+vim.api.nvim_create_autocmd("BufReadPost", {
+    pattern = "*",
+    callback = function()
+        M.load_highlights()
+    end,
+})
 
+return M
 
