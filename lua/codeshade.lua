@@ -88,3 +88,4 @@ vim.api.nvim_set_keymap('n', '<Leader>lh', ':LoadHighlight<CR>', { noremap = tru
 
 return M
 
+
