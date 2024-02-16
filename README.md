@@ -19,7 +19,7 @@ You can install CodeShade using your favorite Neovim package manager. Here's an 
 
 vim
 
-Plug 'your-github-username/codeshade'
+Plug 'https://github.com/alexm3133/codeshade'
 
 After adding the plugin, run :PlugInstall in Neovim to install it.
 Usage
