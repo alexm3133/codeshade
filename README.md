@@ -20,15 +20,17 @@ Installation
 
 Install CodeShade using your preferred Neovim package manager. For vim-plug, add the following line to your init.vim:
 
-Plug 'alexm3133/codeshade'
+      Plug 'alexm3133/codeshade'
 
-Then run :PlugInstall in Neovim.
+Then run:
+
+     :PlugInstall in Neovim.
 
 Usage:
 
-    * Highlighting Sections: In visual mode, select lines and execute :ToggleHighlight or use the designated keybinding to highlight.
-    * Loading Highlights: Automatically done on file open. Manually invoke with :LoadHighlight.
-    * Removing Highlights: Reselect highlighted sections and execute :ToggleHighlight again to remove.
+     Highlighting Sections: In visual mode, select lines and execute :ToggleHighlight or use the designated keybinding to highlight.
+     Loading Highlights: Automatically done on file open. Manually invoke with :LoadHighlight.
+     Removing Highlights: Reselect highlighted sections and execute :ToggleHighlight again to remove.
 
 After you should add to your init.vim or init.lua 
 
@@ -40,11 +42,11 @@ Configure default keybindings in your init.vim or init.lua:
 
 vim
 
-" Visual mode - Toggle highlight
-vmap <Leader>hl :ToggleHighlight<CR>
-" Normal mode - Load highlights
-nmap <Leader>lh :LoadHighlight<CR>
-
+    " Visual mode - Toggle highlight
+    vmap <Leader>hl :ToggleHighlight<CR>
+    " Normal mode - Load highlights
+    nmap <Leader>lh :LoadHighlight<CR>
+    
 Contributing:
 
 Feedback, feature suggestions, and contributions are welcome. Feel free to open issues or pull requests on GitHub.
