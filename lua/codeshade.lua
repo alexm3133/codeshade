@@ -11,10 +11,13 @@
 local M = {}
 local highlight_file = vim.fn.stdpath('data') .. '/highlighted_lines.txt'
 
--- Define el grupo de resaltado
+-- Define los grupos de resaltado
 vim.api.nvim_exec([[
   highlight CustomHighlight guifg=Black guibg=Yellow ctermfg=Black ctermbg=Yellow
+  highlight CustomHighlightQuestion guifg=Black guibg=Red ctermfg=Black ctermbg=Red
 ]], false)
+
+
 
 -- Función para parsear el archivo de resaltados y obtener solo los resaltados para el archivo actual
 local function parse_highlight_file()
@@ -45,19 +48,26 @@ local function save_highlights(highlights)
 end
 
 -- Función para alternar el resaltado de las líneas seleccionadas
-function M.toggle_highlight()
+
+function M.toggle_highlight(opts)
+    local category = opts.args
     local bufnr = vim.api.nvim_get_current_buf()
     local start_line, end_line = vim.fn.line("'<"), vim.fn.line("'>")
     local highlights = parse_highlight_file()
 
+    -- Determina el grupo de resaltado basado en la categoría
+    local highlight_group = "CustomHighlight" -- Por defecto
+    if category == "-question" then
+        highlight_group = "CustomHighlightQuestion"
+    end
+
     for lnum = start_line, end_line do
+        -- Aquí, revisa si la línea ya está resaltada y alterna basado en eso
         if highlights[lnum] then
-            -- Si ya está resaltado, quitar el resaltado
             vim.api.nvim_buf_clear_namespace(bufnr, -1, lnum-1, lnum)
             highlights[lnum] = nil
         else
-            -- Si no está resaltado, añadir el resaltado
-            vim.api.nvim_buf_add_highlight(bufnr, -1, "CustomHighlight", lnum - 1, 0, -1)
+            vim.api.nvim_buf_add_highlight(bufnr, -1, highlight_group, lnum - 1, 0, -1)
             highlights[lnum] = true
         end
     end
@@ -66,6 +76,7 @@ function M.toggle_highlight()
 end
 
 -- Función para cargar resaltados automáticamente al abrir un archivo
+
 function M.load_highlights()
     local bufnr = vim.api.nvim_get_current_buf()
     local highlights = parse_highlight_file()
@@ -76,10 +87,13 @@ function M.load_highlights()
 end
 
 -- Comandos y atajos de teclado
-vim.api.nvim_create_user_command('ToggleHighlight', M.toggle_highlight, {range = true})
-vim.api.nvim_create_user_command('LoadHighlight', M.load_highlights, {})
 vim.api.nvim_set_keymap('v', '<Leader>hl', ':ToggleHighlight<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>lh', ':LoadHighlight<CR>', { noremap = true, silent = true })
+
+-- Esta es la definición correcta que permite argumentos opcionales.
+vim.api.nvim_create_user_command('ToggleHighlight', function(opts)
+    M.toggle_highlight(opts)
+end, {nargs='?', range = true})
 
 -- Autocargar resaltados al abrir archivos
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -90,4 +104,3 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 return M
-

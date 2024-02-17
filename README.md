@@ -7,7 +7,7 @@ CodeShade is a Neovim plugin written in Lua that enables persistent highlighting
 Features
 
    * Persistent Highlighting: Retains highlights across sessions, enabling you to immediately continue from where you left off.
-   * Toggle Highlighting: Provides commands and keybindings to add or remove highlights.
+   * Toggle Highlighting with Color Categories: Beyond simply toggling highlights, CodeShade now supports multiple color categories. Use :ToggleHighlight for the default yellow or :ToggleHighlight -question to apply a red highlight, enhancing code organization and readability. This feature allows for categorizing highlighted sections by importance, question, or any custom category you define. 
    * Buffer-Specific Highlighting: Ensures highlights are relevant to the specific files you're working on, avoiding cross-buffer highlight pollution.
 
 Getting Started
