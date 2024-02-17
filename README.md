@@ -1,47 +1,49 @@
-CodeShade for Neovim
+CodeShade for Neovim(an easy highlighter of text, written in Lua)
 
-CodeShade is a nascent Neovim plugin crafted with Lua, aimed at augmenting your coding experience by providing the ability to persistently highlight sections of code. This capability is invaluable for flagging areas needing review, accentuating critical code segments, or simply maintaining focus on specific parts during your development sessions.
+CodeShade is a Neovim plugin written in Lua that enables persistent highlighting of code sections. Designed to assist in the development process, it allows for marking sections of code for review, emphasizing important parts, or maintaining focus on specific segments.
 Features
 
-    Persistent Highlighting: CodeShade remembers your highlighted sections, even after closing and reopening files, making it easier to pick up right where you left off.
-    Toggle Highlighting: Easily highlight or remove highlighting from any section with a simple command or keybinding.
-    Buffer-Specific Highlighting: Highlights are specific to each buffer, ensuring that your markings are always relevant to the file you're working on.
+   * Persistent Highlighting: Retains highlights across sessions, enabling you to immediately continue from where you left off.
+   * Toggle Highlighting: Provides commands and keybindings to add or remove highlights.
+   * Buffer-Specific Highlighting: Ensures highlights are relevant to the specific files you're working on, avoiding cross-buffer highlight pollution.
 
 Getting Started
 Prerequisites
 
-    Neovim (0.5.0 or later)
-    Knowledge of your Neovim's init.vim or init.lua file for configuration.
+  * Neovim (0.5.0 or later)
+  * Familiarity with configuring Neovim's init.vim or init.lua.
 
 Installation
 
-You can install CodeShade using your favorite Neovim package manager. Here's an example using vim-plug:
+Install CodeShade using your preferred Neovim package manager. For vim-plug, add the following line to your init.vim:
 
 vim
 
-Plug 'https://github.com/alexm3133/codeshade'
+Plug 'alexm3133/codeshade'
 
-After adding the plugin, run :PlugInstall in Neovim to install it.
+Then run :PlugInstall in Neovim.
 Usage
+    * Highlighting Sections: In visual mode, select lines and execute :ToggleHighlight or use the designated keybinding to highlight.
+    * Loading Highlights: Automatically done on file open. Manually invoke with :LoadHighlight.
+    * Removing Highlights: Reselect highlighted sections and execute :ToggleHighlight again to remove.
 
-    Highlight Sections: Enter visual mode, select the lines you wish to highlight, and then use the :ToggleHighlight command or the configured keybinding to highlight the selection.
-    Load Highlights: Highlights are loaded automatically upon opening files. To manually load highlights, use the :LoadHighlight command.
-    Remove Highlights: Simply reselect highlighted sections and toggle the highlight off using the same command or keybinding.
+After you should add to your init.vim or init.lua 
+    lua require'codeshade'
 
 Keybindings
 
-Add the following to your init.vim or init.lua to set up default keybindings:
+Configure default keybindings in your init.vim or init.lua:
 
 vim
 
-" Visual mode - toggle highlight
+" Visual mode - Toggle highlight
 vmap <Leader>hl :ToggleHighlight<CR>
-" Normal mode - load highlights
+" Normal mode - Load highlights
 nmap <Leader>lh :LoadHighlight<CR>
 
 Contributing
 
-Contributions to CodeShade are welcome! Whether it's bug reports, feature suggestions, or code contributions, please feel free to make a pull request or open an issue on GitHub.
-License
+Feedback, feature suggestions, and contributions are welcome. Feel free to open issues or pull requests on GitHub.
 
-Distributed under the MIT License. See LICENSE for more information.
+
+
