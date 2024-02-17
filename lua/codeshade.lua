@@ -1,12 +1,9 @@
-"=================================================
 
-"" File: lua/codeshade.lua
-
-"" Description: Highlight lines in a file for enhanced code readability
-
-""Author: Alex Matei
-
-================================================="
+-- =================================================
+-- File: lua/codeshade.lua
+-- Description: Highlight lines in a file for enhanced code readability
+-- Author: Alex Matei
+-- =================================================
 
 local M = {}
 local highlight_file = vim.fn.stdpath('data') .. '/highlighted_lines.txt'
